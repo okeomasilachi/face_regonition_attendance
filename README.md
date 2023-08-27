@@ -3,13 +3,13 @@
 This README provides an overview of the Python code that implements an Attendance System using the K-Nearest Neighbors (KNN) algorithm and OpenCV. The system captures images, recognizes faces, and records attendance based on recognized faces. The code is organized into a class-based structure and uses the Tkinter library for the graphical user interface.
 
 ### Table of Contents
-* Introduction
-* Requirements
-* Installation
-* Usage
-* Features
-* Contributing
-* License
+* **_Introduction_**
+* **_Requirements_**
+* **_Installation_**
+* **_Usage_**
+* **_Features_**
+* **_Contributing_**
+* **_License_**
 
 ## Introduction
 The Attendance System is designed to automate the process of taking attendance using facial recognition technology. It captures images from a webcam, detects faces, and classifies them using the KNN algorithm. The system allows you to log in, add students' data, mark attendance, and visualize attendance records.
@@ -19,7 +19,7 @@ To run this code, you'll need the following dependencies:
 
 * Python 3.x
 * scikit-learn library (for KNN classifier)
-*opencv-python library (for image processing)
+* opencv-python library (for image processing)
 * numpy library (for numerical operations)
 * tkinter library (for GUI)
 * streamlit library (for displaying attendance records)
