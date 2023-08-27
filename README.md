@@ -23,7 +23,8 @@ To run this code, you'll need the following dependencies:
 * numpy library (for numerical operations)
 * tkinter library (for GUI)
 * streamlit library (for displaying attendance records)
-* You can install these dependencies using the following command:
+
+You can install these dependencies using the following command:
 
 `pip install scikit-learn opencv-python numpy tkinter streamlit`
 
