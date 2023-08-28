@@ -33,15 +33,15 @@ class Application:
         self.password_entry.grid(row=1, column=1, pady=10)
 
         self.login_button = tk.Button(self.login_frame, text="Login", command=self.login)
-        self.login_button.grid(row=5, columnspan=3, pady=10)
-
-        # starts a subprocess for the attendance to be displayed
-        subprocess.Popen(["streamlit", "run", "web.py"])
+        self.login_button.grid(row=5, columnspan=3, pady=10)       
 
         self.main_frame = tk.Frame(self.root)
-
+        
         self.message_label = tk.Label(self.main_frame, font=("Arial", 20), text="Nkemakola Attendance System")
         self.message_label.pack(pady=100)
+
+         # starts a subprocess for the attendance to be displayed
+        subprocess.Popen(["streamlit", "run", "web.py"])
 
         self.final_frame = tk.Frame(self.root)
 
@@ -205,8 +205,8 @@ class Application:
             video.release()
             cv2.destroyAllWindows()
         else:
-            messagebox.showerror("Mark Attendance", F"Unknown course '{course}'\n"
-                                                    F"Please follow the formate 'ABC123'\n")
+            messagebox.showerror("Mark Attendance", F"Unknown course format '{course}'\n"
+                                                    F"Please follow the format 'ABC123'\n")
 
 if __name__ == "__main__":
     root = tk.Tk()

@@ -33,7 +33,7 @@ else:
 
             # Filter the DataFrame based on the selected course
             course_df = df[df["COURSE"] == selected_course]
-
+     
             # Display attendance for the selected course
             st.write(f"Attendance for Course: {selected_course}")
             st.dataframe(course_df.style.highlight_max(axis=0))
@@ -51,7 +51,6 @@ else:
 
             # Filter the DataFrame based on the selected course
             date_df = df[df["DATE"] == selected_date]
-
             # Display attendance for the selected course
             st.write(f"Attendance for Date: {selected_date}")
             st.dataframe(date_df.style.highlight_max(axis=0))
