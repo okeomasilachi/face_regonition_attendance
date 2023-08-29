@@ -6,15 +6,15 @@ import pickle
 import csv
 import time
 from datetime import datetime
-from Attendance.testcsv import real, check_course, check_mat_no
+from Attendance.onyedibia import real, check_course, check_mat_no
 import numpy as np
 import tkinter as tk
 from tkinter import messagebox
 import subprocess
 
 
-
 class Application:
+    
     def __init__(self, root):
         self.root = root
         self.root.title("Attendance System By OBI DORIS NKEMAKOLA")
@@ -62,6 +62,9 @@ class Application:
         self.button2.grid(row=1, column=3, pady=8)
 
     def login(self):
+        """login
+            Handles the login logic for the Application
+        """
         if self.username_entry.get() == "okeoma" and self.password_entry.get() == "okeoma":
             self.login_frame.destroy()
             self.main_frame.pack(padx=20, pady=20)
@@ -76,6 +79,7 @@ class Application:
         self.final_frame.pack(padx=50, pady=90)
 
     def add_std(self):
+        
         name = self.entry1.get()
         if check_mat_no(str(name)):
             video = cv2.VideoCapture(0)
