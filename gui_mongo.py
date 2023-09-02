@@ -12,11 +12,19 @@ import tkinter as tk
 from tkinter import messagebox
 import subprocess
 from pymongo import MongoClient
+from decouple import config
+from pymongo.mongo_client import MongoClient
 
-MONGO_URI = "YOUR_MONGODB_ATLAS_URI"
-DB_NAME = "face"
-COLLECTION_NAME = "face_ats"
 
+client = MongoClient(config("MONGO_URI"))
+
+# Send a ping to confirm a successful connection
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
+    
 class Application:
     
     def __init__(self, root):
@@ -45,7 +53,7 @@ class Application:
         self.message_label.pack(pady=100)
 
          # starts a subprocess for the attendance to be displayed
-        subprocess.Popen(["streamlit", "run", "web.py"])
+        # subprocess.Popen(["streamlit", "run", "web.py"])
 
         self.final_frame = tk.Frame(self.root)
 
@@ -116,6 +124,18 @@ class Application:
 
             faces_data = np.asarray(faces_data)
             faces_data = faces_data.reshape(10, -1)
+            
+            client = MongoClient(config("MONGO_URI"))
+            db = client[config("DB_NAME")]
+            collection = db[config("COLLECTION_VALUE")]
+
+            if collection.count_documents({"name": name}) == 0:
+                student_data = {
+                    "name": name,
+                    "faces_data": faces_data.tolist()
+                }
+                collection.insert_one(student_data)
+                print("Student added to Cloud data base")
 
             if 'mat_no.pkl' not in os.listdir('data/'):
                 names = [name] * 10
@@ -131,15 +151,15 @@ class Application:
             if 'faces_data.pkl' not in os.listdir('data/'):
                 with open('data/faces_data.pkl', 'wb') as f:
                     pickle.dump(faces_data, f)
-                    print("student added to base")
+                    print("student added to local base")
             else:
                 with open('data/faces_data.pkl', 'rb') as f:
                     faces = pickle.load(f)
-                    print("student added to base")
+                    print("student added to local base")
                 faces = np.append(faces, faces_data, axis=0)
                 with open('data/faces_data.pkl', 'wb') as f:
                     pickle.dump(faces, f)
-                    print("student added to base")
+                    print("student added to local base")
         else:
             messagebox.showerror("Add Student", F"Invalid Matric number '{name}'\n"
                                                     F"Please follow the format 'D/1234/12/123'\n")
@@ -163,9 +183,9 @@ class Application:
 
             col_names = ['MATRIC NUMBER', 'TIME', 'DATE', 'COURSE']
 
-            client = MongoClient(MONGO_URI)
-            db = client[DB_NAME]
-            collection = db[COLLECTION_NAME]
+            client = MongoClient(config("MONGO_URI"))
+            db = client[config("DB_NAME")]
+            collection = db[config("COLLECTION_NAME")]
             
             while True:
                 ret, frame = video.read()
