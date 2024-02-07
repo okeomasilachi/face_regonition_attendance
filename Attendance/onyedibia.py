@@ -100,6 +100,7 @@ def files_read(file_path, mat_n, course):
         # read the file one line at a time
         for lines in csv_reader:
             # getting the most recent attendance date for the student on the particular course
+            print(lines)
             if mat_n == lines[0] and course == lines[3]:
                 high = ret_date_fom(lines[2])
                 if default < high:

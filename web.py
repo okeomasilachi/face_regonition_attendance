@@ -1,3 +1,4 @@
+#!./venv/scripts/python
 import streamlit as st
 import pandas as pd
 from streamlit_autorefresh import st_autorefresh

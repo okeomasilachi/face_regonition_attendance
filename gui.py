@@ -40,8 +40,7 @@ class Application:
         self.message_label = tk.Label(self.main_frame, font=("Arial", 20), text="Nkemakola Attendance System")
         self.message_label.pack(pady=100)
 
-         # starts a subprocess for the attendance to be displayed
-        subprocess.Popen(["streamlit", "run", "web.py"])
+        
 
         self.final_frame = tk.Frame(self.root)
 
@@ -77,6 +76,14 @@ class Application:
     def show_final_frame(self):
         self.main_frame.destroy()
         self.final_frame.pack(padx=50, pady=90)
+        self.start_streamlit()
+
+    def start_streamlit(self):
+        """Starts a subprocess running the Streamlit app"""
+        print("starting streamlit app")
+        script_path = os.path.join(os.getcwd(), "web.py")
+        subprocess.Popen(["streamlit", "run", script_path])
+        print("streamlit app started")
 
     def add_std(self):
         
@@ -84,11 +91,8 @@ class Application:
         if check_mat_no(str(name)):
             video = cv2.VideoCapture(0)
             facedetect = cv2.CascadeClassifier('data/haarcascade_frontalface_default.xml')
-
             faces_data = []
-
             i = 0
-
             while True:
                 ret, frame = video.read()
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -153,12 +157,9 @@ class Application:
                 self.faces = pickle.load(f)
 
             print('Shape of Faces matrix --> ', self.faces.shape)
-
             knn = KNeighborsClassifier(n_neighbors=5)
             knn.fit(self.faces, self.labels)
-
             col_names = ['MATRIC NUMBER', 'TIME', 'DATE', 'COURSE']
-
             while True:
                 ret, frame = video.read()
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
