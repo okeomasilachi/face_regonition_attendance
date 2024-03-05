@@ -81,8 +81,8 @@ class Application:
     def start_streamlit(self):
         """Starts a subprocess running the Streamlit app"""
         print("starting streamlit app")
-        script_path = os.path.join(os.getcwd(), "web.py")
-        subprocess.Popen(["streamlit", "run", script_path])
+        # script_path = os.path.join(os.getcwd(), "web.py")
+        # subprocess.Popen(["streamlit", "run", script_path])
         print("streamlit app started")
 
     def add_std(self):
