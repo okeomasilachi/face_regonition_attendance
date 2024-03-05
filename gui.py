@@ -14,7 +14,7 @@ import subprocess
 
 
 class Application:
-    
+
     def __init__(self, root):
         self.root = root
         self.root.title("Attendance System By OBI DORIS NKEMAKOLA")
@@ -32,15 +32,17 @@ class Application:
         self.password_entry = tk.Entry(self.login_frame, show="*")
         self.password_entry.grid(row=1, column=1, pady=10)
 
-        self.login_button = tk.Button(self.login_frame, text="Login", command=self.login)
-        self.login_button.grid(row=5, columnspan=3, pady=10)       
+        self.login_button = tk.Button(
+            self.login_frame, text="Login", command=self.login
+        )
+        self.login_button.grid(row=5, columnspan=3, pady=10)
 
         self.main_frame = tk.Frame(self.root)
-        
-        self.message_label = tk.Label(self.main_frame, font=("Arial", 20), text="Nkemakola Attendance System")
-        self.message_label.pack(pady=100)
 
-        
+        self.message_label = tk.Label(
+            self.main_frame, font=("Arial", 20), text="Nkemakola Attendance System"
+        )
+        self.message_label.pack(pady=100)
 
         self.final_frame = tk.Frame(self.root)
 
@@ -54,24 +56,33 @@ class Application:
         self.entry2 = tk.Entry(self.final_frame)
         self.entry2.grid(row=1, column=1, pady=10)
 
-        self.button1 = tk.Button(self.final_frame, text="Add Student", command=self.add_std)
+        self.button1 = tk.Button(
+            self.final_frame, text="Add Student", command=self.add_std
+        )
         self.button1.grid(row=0, column=3, pady=10)
 
-        self.button2 = tk.Button(self.final_frame, text="Mark Attendance", command=self.mark_attendance)
+        self.button2 = tk.Button(
+            self.final_frame, text="Mark Attendance", command=self.mark_attendance
+        )
         self.button2.grid(row=1, column=3, pady=8)
 
     def login(self):
         """login
-            Handles the login logic for the Application
+        Handles the login logic for the Application
         """
-        if self.username_entry.get() == "okeoma" and self.password_entry.get() == "okeoma":
+        if (
+            self.username_entry.get() == "okeoma"
+            and self.password_entry.get() == "okeoma"
+        ):
             self.login_frame.destroy()
             self.main_frame.pack(padx=20, pady=20)
             self.root.after(2000, self.show_final_frame)
         else:
             self.username_entry.insert(0, "")
             self.password_entry.insert(0, "")
-            messagebox.showerror("Login Failed", "Invalid credentials. Please try again.")
+            messagebox.showerror(
+                "Login Failed", "Invalid credentials. Please try again."
+            )
 
     def show_final_frame(self):
         self.main_frame.destroy()
@@ -81,35 +92,42 @@ class Application:
     def start_streamlit(self):
         """Starts a subprocess running the Streamlit app"""
         print("starting streamlit app")
-        # script_path = os.path.join(os.getcwd(), "web.py")
-        # subprocess.Popen(["streamlit", "run", script_path])
+        script_path = os.path.join(os.getcwd(), "web.py")
+        subprocess.Popen(["streamlit", "run", script_path])
         print("streamlit app started")
 
     def add_std(self):
-        
         name = self.entry1.get()
         if check_mat_no(str(name)):
             video = cv2.VideoCapture(0)
-            facedetect = cv2.CascadeClassifier('data/haarcascade_frontalface_default.xml')
+            facedetect = cv2.CascadeClassifier(
+                "data/haarcascade_frontalface_default.xml"
+            )
             faces_data = []
             i = 0
             while True:
                 ret, frame = video.read()
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 faces = facedetect.detectMultiScale(gray, 1.3, 5)
-                for (x, y, w, h) in faces:
-                    crop_img = frame[y:y + h, x:x + w, :]
+                for x, y, w, h in faces:
+                    crop_img = frame[y : y + h, x : x + w, :]
                     resized_img = cv2.resize(crop_img, (50, 50))
                     if len(faces_data) <= 10 and i % 10 == 0:
                         faces_data.append(resized_img)
                     i = i + 1
-                    cv2.putText(frame, str(len(faces_data)), (50, 50),
-                                cv2.FONT_HERSHEY_COMPLEX,
-                                1, (50, 50, 255), 1)
+                    cv2.putText(
+                        frame,
+                        str(len(faces_data)),
+                        (50, 50),
+                        cv2.FONT_HERSHEY_COMPLEX,
+                        1,
+                        (50, 50, 255),
+                        1,
+                    )
                     cv2.rectangle(frame, (x, y), (x + w, y + h), (50, 50, 255), 1)
                 cv2.imshow("Frame", frame)
                 k = cv2.waitKey(1)
-                if k == ord('q') or len(faces_data) == 10:
+                if k == ord("q") or len(faces_data) == 10:
                     break
             video.release()
             cv2.destroyAllWindows()
@@ -117,74 +135,91 @@ class Application:
             faces_data = np.asarray(faces_data)
             faces_data = faces_data.reshape(10, -1)
 
-            if 'mat_no.pkl' not in os.listdir('data/'):
+            if "mat_no.pkl" not in os.listdir("data/"):
                 names = [name] * 10
-                with open('data/mat_no.pkl', 'wb') as f:
+                with open("data/mat_no.pkl", "wb") as f:
                     pickle.dump(names, f)
             else:
-                with open('data/mat_no.pkl', 'rb') as f:
+                with open("data/mat_no.pkl", "rb") as f:
                     names = pickle.load(f)
                 names = names + [name] * 10
-                with open('data/mat_no.pkl', 'wb') as f:
+                with open("data/mat_no.pkl", "wb") as f:
                     pickle.dump(names, f)
 
-            if 'faces_data.pkl' not in os.listdir('data/'):
-                with open('data/faces_data.pkl', 'wb') as f:
+            if "faces_data.pkl" not in os.listdir("data/"):
+                with open("data/faces_data.pkl", "wb") as f:
                     pickle.dump(faces_data, f)
                     print("student added to base")
             else:
-                with open('data/faces_data.pkl', 'rb') as f:
+                with open("data/faces_data.pkl", "rb") as f:
                     faces = pickle.load(f)
                     print("student added to base")
                 faces = np.append(faces, faces_data, axis=0)
-                with open('data/faces_data.pkl', 'wb') as f:
+                with open("data/faces_data.pkl", "wb") as f:
                     pickle.dump(faces, f)
                     print("student added to base")
         else:
-            messagebox.showerror("Add Student", F"Invalid Matric number '{name}'\n"
-                                                    F"Please follow the format 'D/1234/12/123'\n")
+            messagebox.showerror(
+                "Add Student",
+                f"Invalid Matric number '{name}'\n"
+                f"Please follow the format 'D/1234/12/123'\n",
+            )
 
     def mark_attendance(self):
         course = self.entry2.get()
         if check_course(str(course)):
             video = cv2.VideoCapture(0)
-            facedetect = (cv2.CascadeClassifier
-                          ('data/haarcascade_frontalface_default.xml'))
+            facedetect = cv2.CascadeClassifier(
+                "data/haarcascade_frontalface_default.xml"
+            )
 
-            with open('data/mat_no.pkl', 'rb') as w:
+            with open("data/mat_no.pkl", "rb") as w:
                 self.labels = pickle.load(w)
-            with open('data/faces_data.pkl', 'rb') as f:
+            with open("data/faces_data.pkl", "rb") as f:
                 self.faces = pickle.load(f)
 
-            print('Shape of Faces matrix --> ', self.faces.shape)
+            print("Shape of Faces matrix --> ", self.faces.shape)
             knn = KNeighborsClassifier(n_neighbors=5)
             knn.fit(self.faces, self.labels)
-            col_names = ['MATRIC NUMBER', 'TIME', 'DATE', 'COURSE']
+            col_names = ["MATRIC NUMBER", "TIME", "DATE", "COURSE"]
+            
+            confidence_threshold = 0.8 
+            
             while True:
                 ret, frame = video.read()
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 faces = facedetect.detectMultiScale(gray, 1.3, 5)
+
                 for (x, y, w, h) in faces:
                     crop_img = frame[y:y + h, x:x + w, :]
                     resized_img = cv2.resize(crop_img, (50, 50)).flatten().reshape(1, -1)
-                    self.output = knn.predict(resized_img)
-                    ts = time.time()
-                    date = datetime.fromtimestamp(ts).strftime("%d-%m-%Y")
-                    timestamp = datetime.fromtimestamp(ts).strftime("%H:%M-%S")
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 1)
+
+                    # Get prediction and confidence level
+                    prediction = knn.predict(resized_img)[0]
+                    confidence_scores = knn.predict_proba(resized_img)[0]
+                    max_confidence = max(confidence_scores)
+
+                    # Check confidence
+                    if max_confidence >= confidence_threshold:
+                        output_label = prediction
+                    else:
+                        output_label = "Unknown"
+
+                    # Display rectangle and label
                     cv2.rectangle(frame, (x, y), (x + w, y + h), (50, 50, 255), 2)
                     cv2.rectangle(frame, (x, y - 40), (x + w, y), (50, 50, 255), -1)
-                    cv2.putText(frame, str(self.output[0]), (x, y - 15), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 1)
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (50, 50, 255), 1)
-                    self.attendance = [str(self.output[0]), str(timestamp), date, course]
+                    cv2.putText(frame, str(output_label), (x, y - 15), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 1)
+
                 cv2.imshow("Frame", frame)
                 k = cv2.waitKey(1)
-                if k == ord('m'):
+                if k == ord("m"):
                     # Same attendance marking logic as before (without needing another cv2.waitKey())
                     num = real(self.output[0], course)
                     if num == -2:
                         time.sleep(2)
-                        with open("Attendance/Attendance_23-07-2023.csv", "+a") as csvfile:
+                        with open(
+                            "Attendance/Attendance_23-07-2023.csv", "+a"
+                        ) as csvfile:
                             writer = csv.writer(csvfile)
                             writer.writerow(col_names)
                             writer.writerow(self.attendance)
@@ -193,25 +228,30 @@ class Application:
                     elif num == 0:
                         time.sleep(2)
                         if os.path.isfile("Attendance/Attendance_23-07-2023.csv"):
-                            with open("Attendance/Attendance_23-07-2023.csv", "+a") as csvfile:
+                            with open(
+                                "Attendance/Attendance_23-07-2023.csv", "+a"
+                            ) as csvfile:
                                 writer = csv.writer(csvfile)
                                 writer.writerow(self.attendance)
                             csvfile.close()
                             print("Attendance taken for", self.attendance[0])
                     elif num == 1:
-                        print(f"Already marked attendance for "
-                              f"{self.attendance[0]}")
+                        print(f"Already marked attendance for " f"{self.attendance[0]}")
                     else:
                         sys.stderr.write("")
                         print("Incorrect device date")
-                if k == ord('q'):
+                if k == ord("q"):
                     print("Exiting . . .")
                     break
             video.release()
             cv2.destroyAllWindows()
         else:
-            messagebox.showerror("Mark Attendance", F"Unknown course format '{course}'\n"
-                                                    F"Please follow the format 'ABC123'\n")
+            messagebox.showerror(
+                "Mark Attendance",
+                f"Unknown course format '{course}'\n"
+                f"Please follow the format 'ABC123'\n",
+            )
+
 
 if __name__ == "__main__":
     root = tk.Tk()
